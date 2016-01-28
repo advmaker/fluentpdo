@@ -18,7 +18,7 @@ class SelectQuery extends CommonQuery implements Countable {
 
 	private $fromTable, $fromAlias;
 
-	function __construct(FluentPDO $fpdo, $from) {
+	function __construct(FluentPDO $fpdo, $from, $includeTableAliasColumns = true) {
 		$clauses = array(
 			'SELECT' => ', ',
 			'FROM' => null,
@@ -39,7 +39,9 @@ class SelectQuery extends CommonQuery implements Countable {
 		$this->fromAlias = end($fromParts);
 
 		$this->statements['FROM'] = $from;
-		$this->statements['SELECT'][] = $this->fromAlias . '.*';
+		if($includeTableAliasColumns === true) {
+			$this->statements['SELECT'][] = $this->fromAlias . '.*';
+		}
 		$this->joins[] = $this->fromAlias;
 	}
 

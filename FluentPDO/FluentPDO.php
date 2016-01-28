@@ -23,17 +23,18 @@ include_once 'DeleteQuery.php';
 
 class FluentPDO {
 
-	private $pdo, $structure;
+	private $pdo, $structure, $includeTableAliasColumns;
 
 	/** @var boolean|callback */
 	public $debug;
 
-	function __construct(PDO $pdo, FluentStructure $structure = null) {
+	function __construct(PDO $pdo, FluentStructure $structure = null, $includeTableAliasColumns = true) {
 		$this->pdo = $pdo;
 		if (!$structure) {
 			$structure = new FluentStructure;
 		}
 		$this->structure = $structure;
+		$this->includeTableAliasColumns = $includeTableAliasColumns;
 	}
 
 	/** Create SELECT query from $table
@@ -42,7 +43,7 @@ class FluentPDO {
 	 * @return \SelectQuery
 	 */
 	public function from($table, $primaryKey = null) {
-		$query = new SelectQuery($this, $table);
+		$query = new SelectQuery($this, $table, $this->includeTableAliasColumns);
 		if ($primaryKey) {
 			$tableTable = $query->getFromTable();
 			$tableAlias = $query->getFromAlias();
